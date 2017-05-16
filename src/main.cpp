@@ -33,7 +33,33 @@ int main()
   uWS::Hub h;
 
   PID pid;
-  // TODO: Initialize the pid variable.
+  
+  // Manual Tuning:
+  //pid.Init(0.01,0,0);
+  //pid.Init(0.1,0,0);
+  //pid.Init(0.5,0,0); // good behavior but oscillating too much
+  //pid.Init(0.5,0,0.1);
+  //pid.Init(0.5,0,1.0);
+  //pid.Init(0.5,0,5.0); // way better (oscillates but does not go out of the lanes, for the first half of the lap)
+  //pid.Init(0.5,0,10.0); // almost does not go out.
+  //pid.Init(0.5,0,20.0); // does not go out. but still harsh left/right
+  //pid.Init(0.3,0.0,20.0); // quite good but too much on the right
+  //pid.Init(0.3,0.01,20.0); // way too much compensation
+  pid.Init(0.3,0.001,20.0); // quite good!
+
+  // Videos:
+  // video 1: low P
+  // pid.Init(0.01,0.001,20.0); // not reactive enough
+  // video 2: high P
+  // pid.Init(10.0,0.001,20.0);
+  // video 3: high I
+  // pid.Init(0.3,0.01,20.0);
+  // video 4: low I with drift
+  // pid.Init(0.3,0.0,20.0); with added drift (+0.5 in steering angle)
+  // video 5: low D
+  // pid.Init(0.3,0.001,0.0);
+  // video 6: high D
+  // pid.Init(0.3,0.001,1000.0);
 
   h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
@@ -58,6 +84,9 @@ int main()
           * another PID controller to control the speed!
           */
           
+          pid.UpdateError(cte);
+          steer_value =  -pid.TotalError();
+
           // DEBUG
           std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
 

@@ -3,6 +3,56 @@ Self-Driving Car Engineer Nanodegree Program
 
 ---
 
+[//]: # (Image References)
+
+[low-p]: videos_hyperparams/low-p.gif "Low P"
+[high-p]: videos_hyperparams/high-p.gif "High P"
+[low-i]: videos_hyperparams/low-i.gif "Low I"
+[high-i]: videos_hyperparams/high-i.gif "High I"
+[low-d]: videos_hyperparams/low-d.gif "Low D"
+[high-d]: videos_hyperparams/high-d.gif "High D"
+
+## Reflection
+
+## Effect of each of the P, I, D components:
+### Effect of P:
+P is called the proportional term and is proportional to the error. When P is too high, the car oscillates too much, overshoots and the system becomes unstable. However, when P is too small, the car is not responsive enough.
+
+|Low P (0.01)                                  |  High P (10.0) |
+|:-------------------------------------------------------:|:-------------------------------------------------------:|
+|![Low P][low-p] |  ![High P][high-p]|
+
+
+### Effect of I:
+I is the integral term and is proportional to the total accumulated error over time. If the car has a bias, like having a bias towards the right, the integral term will take care of that. When I is too low, it does not correct the bias enough and the car will keep drifting. In the video below we added a drift of +0.5 steering angle to see what that a low I does not compensate it. When I is too high, the car oscillates and the system unstable.
+
+|Low I (0.0)                                 |  High I (0.01) |
+|:-------------------------------------------------------:|:-------------------------------------------------------:|
+|![Low I][low-i] |  ![High I][high-i]|
+
+
+### Effect of D:
+D is the derivative term and is proportional to the derivative of the error. It prevents the car from overshooting and oscillating around the target trajectory. It helps with stability. If D is too low, the car will oscillate since the derivative term won't be able to correct the effects of P and I. If D is too high, it corrects too much and the successive steering angles vary a lot. The car can hardly move, as seen in the video below.
+
+|Low D (0.0)                                 |  High D (1000.0) |
+|:-------------------------------------------------------:|:-------------------------------------------------------:|
+|![Low D][low-d] |  ![High D][high-d]|
+
+
+## How the final hyperparameters were chosen:
+The final hyperparameters were tuned manually at throttle = 0.3.
+1. Tune P while I = 0 and D = 0:
+At P = 0.01, the car was not reactive enough. 
+At P = 0.1, it was better but still not good enough
+Finally, at P = 0.5, the car was reacting properly but was oscillating too much.
+2. Tune D while P = 0.5 and I = 0:
+Start with D = 0.1, then 1.0, 5.0 (car oscillates but does not go out of the lanes, for the first half of the lap), 10.0 (almost does not go out of the lanes) and finally 20.0 (car does not touch the lane but still makes some hars left/right movements)
+3. Lower P from 0.5 to 0.3 to lessen the left/right oscillations
+4. Tune I, using P = 0.3 and D = 20.0
+The car can drive safely with I = 0. However, it seems like the car has a tendency to go to the right too much. The first values of I that we tried were too high (I = 0.1 and 0.01) and the car was going out of the road at the beginning of the lap. With I = 0.001, the car seems to drive safely in the center of the road. We did not want to have a value of I that is too high since it uses the total accumulated error, it could have a negative impact after driving for a long time.
+The final values chosen are: P = 0.3, I = 0.001 and D = 20.0
+
+
 ## Dependencies
 
 * cmake >= 3.5

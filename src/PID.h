@@ -11,6 +11,11 @@ public:
   double d_error;
 
   /*
+  * Tracking
+  */
+  double prev_cte;
+
+  /*
   * Coefficients
   */ 
   double Kp;
