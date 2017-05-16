@@ -43,13 +43,14 @@ D is the derivative term and is proportional to the derivative of the error. It 
 The final hyperparameters were tuned manually at throttle = 0.3.
 1. Tune P while I = 0 and D = 0:
 At P = 0.01, the car was not reactive enough. 
-At P = 0.1, it was better but still not good enough
+At P = 0.1, it was better but still not good enough.
 Finally, at P = 0.5, the car was reacting properly but was oscillating too much.
 2. Tune D while P = 0.5 and I = 0:
-Start with D = 0.1, then 1.0, 5.0 (car oscillates but does not go out of the lanes, for the first half of the lap), 10.0 (almost does not go out of the lanes) and finally 20.0 (car does not touch the lane but still makes some hars left/right movements)
-3. Lower P from 0.5 to 0.3 to lessen the left/right oscillations
-4. Tune I, using P = 0.3 and D = 20.0
-The car can drive safely with I = 0. However, it seems like the car has a tendency to go to the right too much. The first values of I that we tried were too high (I = 0.1 and 0.01) and the car was going out of the road at the beginning of the lap. With I = 0.001, the car seems to drive safely in the center of the road. We did not want to have a value of I that is too high since it uses the total accumulated error, it could have a negative impact after driving for a long time.
+Start with D = 0.1, then 1.0, 5.0 (car oscillates but does not go out of the lanes, for the first half of the lap), 10.0 (almost does not go out of the lanes) and finally 20.0 (car does not touch the lane but still makes some harsh left/right movements).
+3. Lower P from 0.5 to 0.3 to lessen the left/right oscillations.
+4. Tune I, using P = 0.3 and D = 20.0:
+The car can drive safely with I = 0. However, it seems like the car has a tendency to drift to the right. The first values of I that we tried were too high (I = 0.1 and 0.01) and the car was going out of the road at the beginning of the lap. With I = 0.001, the car seems to drive safely in the center of the road. We did not want to have a value of I that is too high: since it uses the total accumulated error, it could have a negative impact after driving for a long time.
+
 The final values chosen are: P = 0.3, I = 0.001 and D = 20.0
 
 
